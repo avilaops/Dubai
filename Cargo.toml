@@ -17,6 +17,20 @@ path = "src/main.rs"
 
 [dependencies]
 # Zero external dependencies - 100% native Rust implementation
+# Internal workspace crates
+avila-geo = { path = "crates/avila-geo" }
+avila-extract = { path = "crates/avila-extract" }
+avila-parser = { path = "crates/avila-parser" }
+avila-http = { path = "crates/avila-http" }
+avila-json = { path = "crates/avila-json" }
+avila-crypto = { path = "crates/avila-crypto" }
+avila-db = { path = "crates/avila-db" }
+avila-cache = { path = "crates/avila-cache" }
+avila-auth = { path = "crates/avila-auth" }
+avila-pdf = { path = "crates/avila-pdf" }
+avila-queue = { path = "crates/avila-queue" }
+avila-search = { path = "crates/avila-search" }
+avila-image = { path = "crates/avila-image" }
 
 [workspace]
 members = [

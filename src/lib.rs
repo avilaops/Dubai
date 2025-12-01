@@ -2,6 +2,7 @@
 // Integrates AvilaGeo + AvilaExtract + AvilaHttp
 // 100% REAL DATA - No simulations
 
+pub mod integration;
 pub mod property_search {
     #[derive(Debug, Clone)]
     pub struct PropertyListing {
