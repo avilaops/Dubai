@@ -121,7 +121,7 @@ impl HtmlParser {
         // Parse attributes
         loop {
             self.skip_whitespace();
-            
+
             if self.pos >= self.input.len() {
                 return Err(ParseError::UnexpectedEnd);
             }
@@ -145,13 +145,13 @@ impl HtmlParser {
 
         // Parse children (simplified)
         // TODO: Implement proper child parsing
-        
+
         Ok(element)
     }
 
     fn parse_tag_name(&mut self) -> Result<String, ParseError> {
         let mut name = String::new();
-        
+
         while self.pos < self.input.len() {
             let c = self.current_char();
             if c.is_whitespace() || c == '>' || c == '/' {
@@ -170,7 +170,7 @@ impl HtmlParser {
 
     fn parse_attribute(&mut self) -> Result<(String, String), ParseError> {
         let mut name = String::new();
-        
+
         // Parse attribute name
         while self.pos < self.input.len() {
             let c = self.current_char();
@@ -248,7 +248,7 @@ mod tests {
     fn test_element_creation() {
         let mut elem = Element::new("div".to_string());
         elem.attributes.push(("class".to_string(), "test".to_string()));
-        
+
         assert_eq!(elem.tag, "div");
         assert_eq!(elem.get_attribute("class"), Some("test"));
     }

@@ -99,7 +99,7 @@ impl JsonParser {
 
     fn parse_value(&mut self) -> Result<JsonValue, JsonError> {
         self.skip_whitespace();
-        
+
         if self.pos >= self.input.len() {
             return Err(JsonError::UnexpectedEnd);
         }
@@ -127,7 +127,7 @@ impl JsonParser {
 
         loop {
             self.skip_whitespace();
-            
+
             // Parse key
             let key = match self.parse_string()? {
                 JsonValue::String(s) => s,
@@ -221,7 +221,7 @@ impl JsonParser {
 
     fn parse_number(&mut self) -> Result<JsonValue, JsonError> {
         let start = self.pos;
-        
+
         while self.pos < self.input.len() {
             let c = self.current_char();
             if !c.is_numeric() && c != '.' && c != '-' && c != 'e' && c != 'E' && c != '+' {
