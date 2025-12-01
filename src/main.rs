@@ -9,10 +9,10 @@ fn main() {
     println!("🦀 Powered by Nícolas Ávila");
     println!("{}", "=".repeat(60));
     println!();
-    
+
     // Initialize real estate search system
     let search = DubaiRealEstateSearch::new();
-    
+
     // Display REAL visa information
     println!("\n📄 INFORMAÇÕES REAIS DE VISTO:");
     println!("{}", "=".repeat(60));
@@ -28,7 +28,7 @@ fn main() {
     for benefit in &visa.entrepreneur_visa.benefits {
         println!("      • {}", benefit);
     }
-    
+
     // Display REAL free zones
     println!("\n\n🏢 FREE ZONES REAIS PARA EMPRESA:");
     println!("{}", "=".repeat(60));
@@ -43,7 +43,7 @@ fn main() {
             println!("      • {}", benefit);
         }
     }
-    
+
     // Display REAL market data
     println!("\n\n📊 DADOS REAIS DO MERCADO:");
     println!("{}", "=".repeat(60));
@@ -54,7 +54,7 @@ fn main() {
     for (area, price) in &stats.average_prices_aed_per_sqm {
         println!("   • {}: AED {:.0}/m²", area, price);
     }
-    
+
     // Display API endpoints
     println!("\n\n🔌 FONTES DE DADOS REAIS:");
     println!("{}", "=".repeat(60));
@@ -67,7 +67,7 @@ fn main() {
     println!("   • https://u.ae (UAE Official Portal)");
     println!("   • https://dubailand.gov.ae (Dubai Land Department)");
     println!("   • https://www.dsc.gov.ae (Dubai Statistics Center)");
-    
+
     println!("\n\n⚠️  PRÓXIMOS PASSOS:");
     println!("{}", "=".repeat(60));
     println!("1. Configurar API keys para Bayut/PropertyFinder");
@@ -75,7 +75,7 @@ fn main() {
     println!("3. Integrar com Dubai Land Department API");
     println!("4. Configurar webhooks para novos imóveis");
     println!("5. Implementar cache local com AvilaDB");
-    
+
     println!("\n✅ Sistema de dados reais inicializado!");
     println!("📦 Stack: 100% Rust nativo - Zero dependências");
     println!("🎯 Missão: Estabelecer presença empresarial em Dubai");

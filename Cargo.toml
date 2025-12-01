@@ -25,6 +25,14 @@ members = [
     "crates/avila-parser",
     "crates/avila-http",
     "crates/avila-json",
+    "crates/avila-crypto",
+    "crates/avila-db",
+    "crates/avila-cache",
+    "crates/avila-auth",
+    "crates/avila-pdf",
+    "crates/avila-queue",
+    "crates/avila-search",
+    "crates/avila-image",
 ]
 
 [profile.release]

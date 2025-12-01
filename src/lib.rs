@@ -28,14 +28,14 @@ pub mod property_search {
     }
 
     pub struct DubaiRealEstateSearch {
-        api_endpoints: Vec<String>,
+        pub api_endpoints: Vec<String>,
     }
 
     impl DubaiRealEstateSearch {
         pub fn new() -> Self {
             println!("🏙️ Initializing Dubai Real Estate Search System");
             println!("🔌 Connecting to real data sources...");
-            
+
             Self {
                 api_endpoints: vec![
                     // Real Dubai property APIs
@@ -51,23 +51,23 @@ pub mod property_search {
             println!("🔍 Fetching REAL properties from Dubai portals");
             println!("   Area: {}", area);
             println!("   Price range: {:?} - {:?}", criteria.min_price, criteria.max_price);
-            
+
             // TODO: Implement real HTTP requests to Bayut/PropertyFinder/Dubizzle APIs
             // This requires API keys and proper authentication
             println!("⚠️  API integration requires authentication - configure API keys");
-            
+
             vec![]
         }
 
         /// Fetch REAL visa requirements from UAE government
         pub fn get_visa_requirements(&self) -> VisaInfo {
             println!("📄 Fetching REAL visa requirements from UAE government APIs");
-            
+
             // Real UAE government portals:
             // - https://www.ica.gov.ae (Federal Authority for Identity and Citizenship)
             // - https://smartservices.ica.gov.ae
             // - https://u.ae/en/information-and-services/visa-and-emirates-id
-            
+
             VisaInfo {
                 entrepreneur_visa: EntrepreneurVisa {
                     name: "UAE Golden Visa (Entrepreneur)".to_string(),
@@ -138,11 +138,11 @@ pub mod property_search {
         /// Fetch REAL market data (requires API integration)
         pub fn get_market_statistics(&self) -> MarketStats {
             println!("📊 Fetching REAL market data from Dubai Land Department");
-            
+
             // Real source: Dubai Land Department (DLD)
             // https://dubailand.gov.ae
             // Dubai Statistics Center: https://www.dsc.gov.ae
-            
+
             MarketStats {
                 source: "Dubai Land Department".to_string(),
                 note: "Requires DLD API access for real-time data".to_string(),

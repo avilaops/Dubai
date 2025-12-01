@@ -40,32 +40,32 @@ impl HttpClient {
     ) -> Result<Response, HttpError> {
         let is_https = url.starts_with("https://");
         let (host, path) = parse_url(url)?;
-        
+
         // Build HTTP request
         let request = build_request(method, &host, &path, body, headers);
-        
+
         // Connect to server
         let port = if is_https { 443 } else { 80 };
         let addr = format!("{}:{}", host, port);
-        
+
         println!("🌐 {} {} (connecting to {})", method, url, addr);
-        
+
         let mut stream = TcpStream::connect(&addr)
             .map_err(|e| HttpError::ConnectionFailed(e.to_string()))?;
-        
+
         // Set timeout
         stream.set_read_timeout(Some(std::time::Duration::from_secs(self.timeout_secs)))
             .map_err(|e| HttpError::ConnectionFailed(e.to_string()))?;
-        
+
         // Send request
         stream.write_all(request.as_bytes())
             .map_err(|e| HttpError::ConnectionFailed(e.to_string()))?;
-        
+
         // Read response
         let mut response_data = Vec::new();
         stream.read_to_end(&mut response_data)
             .map_err(|e| HttpError::ConnectionFailed(e.to_string()))?;
-        
+
         // Parse response
         parse_response(&response_data)
     }
@@ -162,7 +162,7 @@ fn build_request(
 fn parse_response(data: &[u8]) -> Result<Response, HttpError> {
     let response_str = String::from_utf8_lossy(data);
     let mut lines = response_str.lines();
-    
+
     // Parse status line
     let status_line = lines.next().ok_or(HttpError::InvalidResponse)?;
     let status_code = status_line
@@ -170,32 +170,32 @@ fn parse_response(data: &[u8]) -> Result<Response, HttpError> {
         .nth(1)
         .and_then(|s| s.parse::<u16>().ok())
         .ok_or(HttpError::InvalidResponse)?;
-    
+
     // Parse headers
     let mut headers = HashMap::new();
     let mut body_start = 0;
-    
+
     for (i, line) in response_str.lines().enumerate() {
         if line.is_empty() {
             // Empty line marks end of headers
             body_start = response_str.lines().take(i + 1).map(|l| l.len() + 1).sum();
             break;
         }
-        
+
         if let Some(colon_pos) = line.find(':') {
             let key = line[..colon_pos].trim().to_string();
             let value = line[colon_pos + 1..].trim().to_string();
             headers.insert(key, value);
         }
     }
-    
+
     // Extract body
     let body = if body_start < data.len() {
         String::from_utf8_lossy(&data[body_start..]).to_string()
     } else {
         String::new()
     };
-    
+
     Ok(Response {
         status_code,
         headers,
