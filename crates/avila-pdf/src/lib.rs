@@ -57,7 +57,7 @@ impl PdfDocument {
 
     pub fn save(&self, path: &str) -> io::Result<()> {
         let mut file = File::create(path)?;
-        
+
         // PDF Header
         writeln!(file, "%PDF-1.4")?;
         writeln!(file, "%âãÏÓ")?; // Binary comment for PDF readers
@@ -100,7 +100,7 @@ impl PdfDocument {
         for (i, page) in self.pages.iter().enumerate() {
             let content = page.content.join("\n");
             let obj_num = 3 + self.pages.len() + i;
-            
+
             writeln!(file, "{} 0 obj", obj_num)?;
             writeln!(file, "<<")?;
             writeln!(file, "/Length {}", content.len())?;
@@ -169,11 +169,11 @@ pub fn generate_visa_document(applicant_name: &str, output_path: &str) -> io::Re
     });
 
     let page = doc.add_page(595.0, 842.0); // A4 size
-    
+
     page.add_text(50.0, 800.0, "UAE GOLDEN VISA APPLICATION", 24.0);
     page.add_text(50.0, 750.0, "Entrepreneur Category", 16.0);
     page.add_line(50.0, 740.0, 545.0, 740.0);
-    
+
     page.add_text(50.0, 700.0, &format!("Applicant: {}", applicant_name), 12.0);
     page.add_text(50.0, 680.0, "Category: Entrepreneur (10-year visa)", 12.0);
     page.add_text(50.0, 660.0, "Investment Amount: AED 500,000+", 12.0);
@@ -191,7 +191,7 @@ mod tests {
         let mut doc = PdfDocument::new();
         let page = doc.add_page(595.0, 842.0);
         page.add_text(100.0, 700.0, "Hello Dubai!", 12.0);
-        
+
         let path = "test.pdf";
         assert!(doc.save(path).is_ok());
         assert!(fs::metadata(path).is_ok());

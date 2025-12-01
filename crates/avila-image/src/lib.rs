@@ -30,7 +30,7 @@ impl Image {
 
     pub fn resize(&self, new_width: u32, new_height: u32) -> Image {
         let mut result = Image::new(new_width, new_height);
-        
+
         for y in 0..new_height {
             for x in 0..new_width {
                 let src_x = (x * self.width) / new_width;
@@ -39,13 +39,13 @@ impl Image {
                 result.set_pixel(x, y, r, g, b);
             }
         }
-        
+
         result
     }
 
     pub fn to_grayscale(&self) -> Image {
         let mut result = Image::new(self.width, self.height);
-        
+
         for y in 0..self.height {
             for x in 0..self.width {
                 let (r, g, b) = self.get_pixel(x, y);
@@ -53,7 +53,7 @@ impl Image {
                 result.set_pixel(x, y, gray, gray, gray);
             }
         }
-        
+
         result
     }
 }

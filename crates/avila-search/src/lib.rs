@@ -28,7 +28,7 @@ impl SearchIndex {
     pub fn search(&self, query: &str) -> Vec<String> {
         let words = tokenize(query);
         let mut results = Vec::new();
-        
+
         for word in words {
             if let Some(doc_ids) = self.index.get(&word) {
                 results.extend(doc_ids.clone());
