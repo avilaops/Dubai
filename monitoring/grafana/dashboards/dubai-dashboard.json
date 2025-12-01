@@ -1,0 +1,211 @@
+# Dashboard Grafana - Dubai Project
+# Salvar em: monitoring/grafana/dashboards/dubai-dashboard.json
+
+{
+  "dashboard": {
+    "title": "Dubai Project - Produção",
+    "tags": ["arxis", "dubai", "real-estate"],
+    "timezone": "browser",
+    "schemaVersion": 16,
+    "version": 1,
+    "refresh": "10s",
+
+    "panels": [
+      {
+        "id": 1,
+        "title": "Status do Serviço",
+        "type": "stat",
+        "gridPos": {"x": 0, "y": 0, "w": 6, "h": 4},
+        "targets": [{
+          "expr": "up{job=\"dubai-project\"}",
+          "legendFormat": "Dubai Project"
+        }],
+        "options": {
+          "colorMode": "background",
+          "graphMode": "none",
+          "reduceOptions": {
+            "values": false,
+            "calcs": ["lastNotNull"]
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "steps": [
+                {"value": 0, "color": "red"},
+                {"value": 1, "color": "green"}
+              ]
+            },
+            "mappings": [
+              {"value": 0, "text": "DOWN"},
+              {"value": 1, "text": "UP"}
+            ]
+          }
+        }
+      },
+
+      {
+        "id": 2,
+        "title": "Requisições HTTP Total",
+        "type": "graph",
+        "gridPos": {"x": 6, "y": 0, "w": 9, "h": 4},
+        "targets": [{
+          "expr": "rate(http_requests_total{job=\"dubai-project\"}[5m])",
+          "legendFormat": "{{status}}"
+        }],
+        "yaxes": [{"format": "reqps"}, {"show": false}]
+      },
+
+      {
+        "id": 3,
+        "title": "Uso de Memória (MB)",
+        "type": "graph",
+        "gridPos": {"x": 15, "y": 0, "w": 9, "h": 4},
+        "targets": [{
+          "expr": "process_resident_memory_bytes{job=\"dubai-project\"} / 1024 / 1024",
+          "legendFormat": "RAM Usado"
+        }],
+        "yaxes": [{"format": "mbytes"}, {"show": false}]
+      },
+
+      {
+        "id": 4,
+        "title": "Taxa de Erro (%)",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 4, "w": 12, "h": 5},
+        "targets": [{
+          "expr": "(rate(http_requests_total{job=\"dubai-project\",status=~\"5..\"}[5m]) / rate(http_requests_total{job=\"dubai-project\"}[5m])) * 100",
+          "legendFormat": "Erros 5xx"
+        }],
+        "yaxes": [{"format": "percent"}, {"show": false}],
+        "alert": {
+          "conditions": [{
+            "evaluator": {"params": [5], "type": "gt"}
+          }],
+          "frequency": "1m",
+          "name": "Taxa de Erro Alta"
+        }
+      },
+
+      {
+        "id": 5,
+        "title": "Latência HTTP (P95)",
+        "type": "graph",
+        "gridPos": {"x": 12, "y": 4, "w": 12, "h": 5},
+        "targets": [{
+          "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job=\"dubai-project\"}[5m]))",
+          "legendFormat": "P95"
+        }, {
+          "expr": "histogram_quantile(0.50, rate(http_request_duration_seconds_bucket{job=\"dubai-project\"}[5m]))",
+          "legendFormat": "P50"
+        }],
+        "yaxes": [{"format": "s"}, {"show": false}]
+      },
+
+      {
+        "id": 6,
+        "title": "Cache Hit Rate (%)",
+        "type": "gauge",
+        "gridPos": {"x": 0, "y": 9, "w": 6, "h": 5},
+        "targets": [{
+          "expr": "(rate(cache_hits_total{job=\"dubai-project\"}[5m]) / rate(cache_requests_total{job=\"dubai-project\"}[5m])) * 100"
+        }],
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "steps": [
+                {"value": 0, "color": "red"},
+                {"value": 50, "color": "yellow"},
+                {"value": 80, "color": "green"}
+              ]
+            },
+            "unit": "percent",
+            "min": 0,
+            "max": 100
+          }
+        }
+      },
+
+      {
+        "id": 7,
+        "title": "Fila de Jobs",
+        "type": "graph",
+        "gridPos": {"x": 6, "y": 9, "w": 9, "h": 5},
+        "targets": [{
+          "expr": "job_queue_size{job=\"dubai-project\"}",
+          "legendFormat": "Tamanho da Fila"
+        }],
+        "yaxes": [{"format": "short"}, {"show": false}]
+      },
+
+      {
+        "id": 8,
+        "title": "Tamanho do Banco (MB)",
+        "type": "graph",
+        "gridPos": {"x": 15, "y": 9, "w": 9, "h": 5},
+        "targets": [{
+          "expr": "database_size_bytes{job=\"dubai-project\"} / 1024 / 1024",
+          "legendFormat": "AvilaDB"
+        }],
+        "yaxes": [{"format": "mbytes"}, {"show": false}]
+      },
+
+      {
+        "id": 9,
+        "title": "Scraping - Taxa de Sucesso (%)",
+        "type": "stat",
+        "gridPos": {"x": 0, "y": 14, "w": 8, "h": 4},
+        "targets": [{
+          "expr": "(1 - (rate(scraping_failures_total{job=\"dubai-project\"}[10m]) / rate(scraping_attempts_total{job=\"dubai-project\"}[10m]))) * 100"
+        }],
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "steps": [
+                {"value": 0, "color": "red"},
+                {"value": 80, "color": "yellow"},
+                {"value": 95, "color": "green"}
+              ]
+            },
+            "unit": "percent"
+          }
+        }
+      },
+
+      {
+        "id": 10,
+        "title": "TLS Handshakes",
+        "type": "graph",
+        "gridPos": {"x": 8, "y": 14, "w": 8, "h": 4},
+        "targets": [{
+          "expr": "rate(tls_handshake_success_total{job=\"dubai-project\"}[5m])",
+          "legendFormat": "Sucesso"
+        }, {
+          "expr": "rate(tls_handshake_failures_total{job=\"dubai-project\"}[5m])",
+          "legendFormat": "Falhas"
+        }],
+        "yaxes": [{"format": "ops"}, {"show": false}]
+      },
+
+      {
+        "id": 11,
+        "title": "Logs Recentes (Erros)",
+        "type": "logs",
+        "gridPos": {"x": 16, "y": 14, "w": 8, "h": 4},
+        "targets": [{
+          "expr": "{job=\"dubai-project\"} |= \"error\" or \"ERROR\""
+        }]
+      }
+    ],
+
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+
+    "timepicker": {
+      "refresh_intervals": ["5s", "10s", "30s", "1m", "5m", "15m"],
+      "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d"]
+    }
+  }
+}

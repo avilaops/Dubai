@@ -1,0 +1,103 @@
+# Regras de Alerta - Dubai Project
+groups:
+  - name: dubai_alerts
+    interval: 30s
+    rules:
+      # Alerta: Serviço Down
+      - alert: DubaiServiceDown
+        expr: up{job="dubai-project"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: dubai-project
+        annotations:
+          summary: "Dubai Project está DOWN"
+          description: "O serviço Dubai Project não está respondendo há mais de 1 minuto"
+
+      # Alerta: Alto uso de memória
+      - alert: HighMemoryUsage
+        expr: (process_resident_memory_bytes{job="dubai-project"} / 1024 / 1024) > 800
+        for: 5m
+        labels:
+          severity: warning
+          service: dubai-project
+        annotations:
+          summary: "Alto uso de memória"
+          description: "Dubai Project está usando mais de 800MB de RAM"
+
+      # Alerta: Muitos erros HTTP
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{job="dubai-project",status=~"5.."}[5m]) > 0.05
+        for: 2m
+        labels:
+          severity: warning
+          service: dubai-project
+        annotations:
+          summary: "Taxa de erro HTTP alta"
+          description: "Mais de 5% das requisições HTTP estão falhando"
+
+      # Alerta: Scraping falhando
+      - alert: ScrapingFailures
+        expr: rate(scraping_failures_total{job="dubai-project"}[10m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          service: dubai-project
+        annotations:
+          summary: "Scraping de portais falhando"
+          description: "Taxa de falha no scraping está acima de 10%"
+
+      # Alerta: Fila de jobs muito grande
+      - alert: JobQueueBacklog
+        expr: job_queue_size{job="dubai-project"} > 500
+        for: 10m
+        labels:
+          severity: warning
+          service: dubai-project
+        annotations:
+          summary: "Fila de jobs acumulando"
+          description: "Mais de 500 jobs na fila de processamento"
+
+      # Alerta: Cache hit rate baixo
+      - alert: LowCacheHitRate
+        expr: rate(cache_hits_total{job="dubai-project"}[5m]) / rate(cache_requests_total{job="dubai-project"}[5m]) < 0.5
+        for: 10m
+        labels:
+          severity: info
+          service: dubai-project
+        annotations:
+          summary: "Taxa de acerto do cache baixa"
+          description: "Cache hit rate abaixo de 50%"
+
+      # Alerta: Banco de dados crescendo rápido
+      - alert: DatabaseGrowthRate
+        expr: rate(database_size_bytes{job="dubai-project"}[1h]) > 10485760
+        for: 1h
+        labels:
+          severity: info
+          service: dubai-project
+        annotations:
+          summary: "Banco de dados crescendo rapidamente"
+          description: "DB crescendo mais de 10MB/hora"
+
+      # Alerta: TLS handshake falhando
+      - alert: TLSHandshakeFailures
+        expr: rate(tls_handshake_failures_total{job="dubai-project"}[5m]) > 0.01
+        for: 5m
+        labels:
+          severity: warning
+          service: dubai-project
+        annotations:
+          summary: "Falhas no TLS handshake"
+          description: "Handshakes TLS estão falhando"
+
+      # Alerta: Latência alta nas APIs
+      - alert: HighAPILatency
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="dubai-project"}[5m])) > 2
+        for: 5m
+        labels:
+          severity: warning
+          service: dubai-project
+        annotations:
+          summary: "Latência alta nas requisições"
+          description: "P95 das requisições HTTP está acima de 2 segundos"

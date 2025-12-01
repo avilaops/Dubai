@@ -1,0 +1,32 @@
+# Configuração Prometheus
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'arxis'
+    service: 'dubai-project'
+
+# Alerting
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+# Scrape configs
+scrape_configs:
+  # Dubai Project - Métricas da aplicação
+  - job_name: 'dubai-project'
+    static_configs:
+      - targets: ['dubai-project:9090']
+        labels:
+          app: 'dubai'
+          env: 'production'
+
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+# Regras de alerta
+rule_files:
+  - '/etc/prometheus/alerts.yml'
