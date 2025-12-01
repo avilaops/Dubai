@@ -1,0 +1,38 @@
+[package]
+name = "dubai-project"
+version = "0.1.0"
+edition = "2021"
+authors = ["Nícolas Ávila <avilaops@gmail.com>"]
+description = "Dubai establishment project - 100% Rust with zero external dependencies"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/avilaops/dubai"
+
+[lib]
+name = "dubai_project"
+path = "src/lib.rs"
+
+[[bin]]
+name = "dubai-project"
+path = "src/main.rs"
+
+[dependencies]
+# Zero external dependencies - 100% native Rust implementation
+
+[workspace]
+members = [
+    "crates/avila-geo",
+    "crates/avila-extract",
+    "crates/avila-parser",
+    "crates/avila-http",
+    "crates/avila-json",
+]
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
+
+[profile.dev]
+opt-level = 0
+debug = true

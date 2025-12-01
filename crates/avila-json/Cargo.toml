@@ -1,0 +1,10 @@
+[package]
+name = "avila-json"
+version = "0.1.0"
+edition = "2021"
+authors = ["Nícolas Ávila <avilaops@gmail.com>"]
+description = "Native JSON parser and serializer - Zero external dependencies"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+# Zero external dependencies

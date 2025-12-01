@@ -1,0 +1,66 @@
+# 🏙️ Projeto Dubai
+
+## 🎯 Objetivo
+Estabelecer presença empresarial em Dubai com infraestrutura completa.
+
+## 📍 Moradia
+- **Meta**: Adquirir apartamento ou casa em bairro nobre de Dubai
+- **Status**: Em planejamento
+
+## 📄 Documentação
+- **Visto de Empreendedor**
+  - [ ] Pesquisar requisitos
+  - [ ] Preparar documentação
+  - [ ] Submeter aplicação
+  - [ ] Acompanhar processo
+
+## 🏢 Infraestrutura Empresarial
+- **Escritório Corporativo**
+  - [ ] Identificar bairros corporativos
+  - [ ] Avaliar opções de compra
+  - [ ] Negociar aquisição
+  - [ ] Estabelecer operações
+
+## 🦀 Stack Tecnológica
+- **Linguagem**: 100% Rust
+- **Dependências**: Zero dependências externas (native implementation)
+- **Projeto Base**: [avilaops/arxis](https://github.com/avilaops/arxis)
+
+### Ferramentas Arxis Utilizadas
+- [ ] AvilaDB (banco de dados nativo)
+- [ ] AvilaNet (networking)
+- [ ] AvilaAuth (autenticação)
+- [ ] AvilaCrypto (criptografia)
+- [ ] AvilaSync (sincronização)
+- [ ] AvilaSearch (busca)
+- [ ] AvilaCache (cache)
+- [ ] AvilaQueue (filas)
+- [ ] AvilaStream (streaming)
+- [ ] AvilaML (machine learning)
+- [ ] AvilaGeo (geolocalização, mapas, coordenadas)
+- [ ] AvilaExtract (extração de dados, web scraping)
+- [ ] AvilaParser (parsing de documentos e dados)
+- [ ] AvilaHttp (cliente HTTP nativo)
+- [ ] AvilaJson (manipulação JSON)
+- [ ] AvilaImage (processamento de imagens)
+- [ ] AvilaPdf (geração e leitura de PDFs)
+
+### Casos de Uso Específicos
+- **AvilaGeo**: Localizar bairros nobres, escritórios corporativos, calcular distâncias
+- **AvilaExtract**: Scraping de portais imobiliários de Dubai, preços de mercado
+- **AvilaParser**: Processar documentos de visto, contratos, regulamentações
+- **AvilaHttp**: Integração com APIs governamentais e de imóveis
+- **AvilaPdf**: Gerar documentação para aplicação de visto
+
+## 📦 Repositório
+**GitHub**: [Avilaops/dubai](https://github.com/Avilaops/dubai)
+
+## 🚀 Próximos Passos
+1. Finalizar setup do projeto arxis
+2. Pesquisar mercado imobiliário em Dubai
+3. Iniciar processo de visto
+4. Desenvolver aplicações necessárias em Rust
+5. Estabelecer timeline de execução
+
+---
+*Powered by Nícolas Ávila 🦀*
