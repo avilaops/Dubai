@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dubai Atlas • Fatura EDP Novembro/2025</title>
+    <meta
+      name="description"
+      content="Visão interativa dos dados Atlas da fatura EDP Novembro/2025 registrada pela equipe Dubai."
+    />
+    <link rel="stylesheet" href="assets/style.css" />
+  </head>
+  <body>
+    <noscript>
+      Ative o JavaScript para visualizar os dados da fatura sincronizada com o Dubai Atlas.
+    </noscript>
+    <header class="hero">
+      <div class="hero__content">
+        <div>
+          <p class="hero__supertitle">Projeto Dubai · Atlas</p>
+          <h1 class="hero__title">Fatura EDP • Novembro 2025</h1>
+          <p class="hero__subtitle">
+            Dados mapeados para o Kernel Atlas e prontos para publicação soberana via GitHub Pages.
+          </p>
+        </div>
+        <div class="hero__badges">
+          <span class="pill pill--source" data-field="source">EDP</span>
+          <span class="pill" data-field="invoiceNumber"></span>
+          <span class="pill" data-field="atcud"></span>
+        </div>
+      </div>
+      <div class="hero__meta">
+        <div>
+          <h2 class="hero__meta-title">Emissão</h2>
+          <p class="hero__meta-value" data-field="issueDate"></p>
+          <p class="hero__meta-secondary" data-field="billingRange"></p>
+        </div>
+        <div>
+          <h2 class="hero__meta-title">Vencimento</h2>
+          <p class="hero__meta-value" data-field="dueDate"></p>
+          <p class="hero__meta-secondary">Total devido <span data-field="totalAmount"></span></p>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="cards" aria-label="Sumário tático da fatura">
+        <article class="card">
+          <h3>Energia (c/ impostos)</h3>
+          <p class="card__value" data-field="electricityTotal"></p>
+          <p class="card__meta">Sem taxas: <span data-field="electricityNet"></span></p>
+        </article>
+        <article class="card">
+          <h3>Consumo total</h3>
+          <p class="card__value" data-field="consumptionTotal"></p>
+          <p class="card__meta">CO₂ estimado: <span data-field="co2"></span></p>
+        </article>
+        <article class="card">
+          <h3>Tarifa contratada</h3>
+          <p class="card__value" data-field="tariff"></p>
+          <p class="card__meta">Potência: <span data-field="power"></span></p>
+        </article>
+        <article class="card">
+          <h3>Referência MB</h3>
+          <p class="card__value" data-field="entity"></p>
+          <p class="card__meta">Ref.: <span data-field="reference"></span></p>
+        </article>
+      </section>
+
+      <section class="panel">
+        <header class="panel__header">
+          <h2>Cadastro de Pessoa</h2>
+          <p>Dados normalizados pelo Atlas para identificação civil soberana.</p>
+        </header>
+        <div class="panel__content panel__grid">
+          <dl>
+            <dt>Nome</dt>
+            <dd data-field="customerName"></dd>
+          </dl>
+          <dl>
+            <dt>NIF</dt>
+            <dd data-field="customerNif"></dd>
+          </dl>
+          <dl class="panel__wide">
+            <dt>Endereço de faturação</dt>
+            <dd data-field="customerAddress"></dd>
+          </dl>
+        </div>
+      </section>
+
+      <section class="panel">
+        <header class="panel__header">
+          <h2>Contrato &amp; Instalação</h2>
+          <p>Cruzamento Atlas → Regulação energética · Portugal.</p>
+        </header>
+        <div class="panel__content panel__grid">
+          <dl>
+            <dt>Código cliente</dt>
+            <dd data-field="contractCode"></dd>
+          </dl>
+          <dl>
+            <dt>CPE (ponto entrega)</dt>
+            <dd data-field="contractCpe" class="monospace"></dd>
+          </dl>
+          <dl>
+            <dt>Leitura anterior</dt>
+            <dd data-field="previousReadings"></dd>
+          </dl>
+          <dl>
+            <dt>Leitura atual</dt>
+            <dd data-field="currentReadings"></dd>
+          </dl>
+        </div>
+      </section>
+
+      <section class="panel">
+        <header class="panel__header">
+          <h2>Consumo &amp; Qualidade</h2>
+          <p>Estratificação Atlas → Energia (kWh, emissões, notas operacionais).</p>
+        </header>
+        <div class="panel__content">
+          <div class="chips" data-field="consumptionBreakdown"></div>
+          <p class="notes" data-field="consumptionNotes"></p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <header class="panel__header">
+          <h2>Detalhamento Financeiro</h2>
+          <p>Fluxo de caixa fatorial com IVA destacado.</p>
+        </header>
+        <div class="panel__content">
+          <h3>Componentes sem IVA</h3>
+          <div class="table" role="table" aria-label="Encargos sem IVA">
+            <div class="table__head" role="row">
+              <span role="columnheader">Descrição</span>
+              <span role="columnheader" class="numeric">Qtd</span>
+              <span role="columnheader" class="numeric">Preço</span>
+              <span role="columnheader" class="numeric">Valor</span>
+              <span role="columnheader" class="numeric">IVA</span>
+            </div>
+            <div class="table__body" data-field="charges"></div>
+          </div>
+          <h3>Taxas &amp; impostos</h3>
+          <div class="table" role="table" aria-label="Taxas e impostos">
+            <div class="table__head" role="row">
+              <span role="columnheader">Descrição</span>
+              <span role="columnheader" class="numeric">Base</span>
+              <span role="columnheader" class="numeric">IVA</span>
+              <span role="columnheader" class="numeric">Total</span>
+            </div>
+            <div class="table__body" data-field="taxes"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <header class="panel__header">
+          <h2>Pagamentos &amp; Mensagens Atlas</h2>
+          <p>Linhas de pagamento, avisos regulatórios e comunicações ao cliente.</p>
+        </header>
+        <div class="panel__content panel__grid">
+          <dl>
+            <dt>Valor</dt>
+            <dd data-field="paymentAmount"></dd>
+          </dl>
+          <dl>
+            <dt>Validade</dt>
+            <dd data-field="paymentDeadline"></dd>
+          </dl>
+          <dl class="panel__wide">
+            <dt>Canais</dt>
+            <dd data-field="paymentChannels"></dd>
+          </dl>
+          <dl class="panel__wide">
+            <dt>Aviso de eficiência</dt>
+            <dd data-field="efficiencyTip"></dd>
+          </dl>
+          <dl class="panel__wide">
+            <dt>Segurança</dt>
+            <dd data-field="securityNotice"></dd>
+          </dl>
+        </div>
+      </section>
+
+      <section class="panel">
+        <header class="panel__header">
+          <h2>Energia &amp; Sustentabilidade</h2>
+          <p>Mix energético reportado pela EDP, convertido para percentuais Atlas.</p>
+        </header>
+        <div class="panel__content">
+          <ul class="energy-list" data-field="energyMix"></ul>
+          <p class="notes" data-field="energyReference"></p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <header class="panel__header">
+          <h2>Metadados Atlas</h2>
+          <p>Links de auditoria e identificadores soberanos.</p>
+        </header>
+        <div class="panel__content panel__grid">
+          <dl>
+            <dt>ATCUD</dt>
+            <dd data-field="atcudFull"></dd>
+          </dl>
+          <dl>
+            <dt>Fatura audiovisual</dt>
+            <dd data-field="audiovisual"></dd>
+          </dl>
+          <dl class="panel__wide">
+            <dt>Notas adicionais</dt>
+            <dd data-field="additionalNotes"></dd>
+          </dl>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>
+        Atlas Dubai · Publicado via GitHub Pages · Base de dados sincronizada com AvilaDB.
+        Kernel soberano, zero dependências externas.
+      </p>
+    </footer>
+
+    <script src="assets/app.js" type="module"></script>
+  </body>
+</html>

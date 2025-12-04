@@ -1,0 +1,441 @@
+{
+  "meta": {
+    "source": "Dubai Real Estate Atlas",
+    "timestamp": "2025-01-01T00:00:00Z",
+    "total_properties": 12,
+    "currency": "AED",
+    "notes": "Sample data based on real Dubai locations and market research"
+  },
+  "properties": [
+    {
+      "id": "dp-001",
+      "title": "Luxury 2BR Apartment in Dubai Marina",
+      "price": 1850000,
+      "price_per_sqm": 15416.67,
+      "currency": "AED",
+      "location": "Dubai Marina",
+      "coordinates": {
+        "lat": 25.0805,
+        "lon": 55.1399
+      },
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "area_sqm": 120,
+      "property_type": "Apartment",
+      "url": "https://www.bayut.com/property/dubai-marina",
+      "distance_to_burj_khalifa_km": 14.2,
+      "features": [
+        "Sea view",
+        "Balcony",
+        "Gym access",
+        "Swimming pool",
+        "24/7 security"
+      ],
+      "building": "Marina Pinnacle Tower",
+      "year_built": 2015,
+      "ready_to_move": true
+    },
+    {
+      "id": "dp-002",
+      "title": "Premium 3BR in Downtown Dubai",
+      "price": 3200000,
+      "price_per_sqm": 17777.78,
+      "currency": "AED",
+      "location": "Downtown Dubai",
+      "coordinates": {
+        "lat": 25.1932,
+        "lon": 55.276
+      },
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "area_sqm": 180,
+      "property_type": "Apartment",
+      "url": "https://www.bayut.com/property/downtown-dubai",
+      "distance_to_burj_khalifa_km": 0.8,
+      "features": [
+        "Burj Khalifa view",
+        "High floor",
+        "Maid's room",
+        "Private parking",
+        "Dubai Mall access"
+      ],
+      "building": "Boulevard Point",
+      "year_built": 2018,
+      "ready_to_move": true
+    },
+    {
+      "id": "dp-003",
+      "title": "Beachfront Villa at Palm Jumeirah",
+      "price": 8500000,
+      "price_per_sqm": 21250,
+      "currency": "AED",
+      "location": "Palm Jumeirah",
+      "coordinates": {
+        "lat": 25.1124,
+        "lon": 55.139
+      },
+      "bedrooms": 5,
+      "bathrooms": 6,
+      "area_sqm": 400,
+      "property_type": "Villa",
+      "url": "https://www.propertyfinder.ae/property/palm-jumeirah",
+      "distance_to_burj_khalifa_km": 18.5,
+      "features": [
+        "Private beach access",
+        "Garden",
+        "Private pool",
+        "Sea view",
+        "Garage for 2 cars"
+      ],
+      "building": "Garden Homes",
+      "year_built": 2020,
+      "ready_to_move": true
+    },
+    {
+      "id": "dp-004",
+      "title": "Modern 1BR in Business Bay",
+      "price": 950000,
+      "price_per_sqm": 11875,
+      "currency": "AED",
+      "location": "Business Bay",
+      "coordinates": {
+        "lat": 25.1869,
+        "lon": 55.2649
+      },
+      "bedrooms": 1,
+      "bathrooms": 2,
+      "area_sqm": 80,
+      "property_type": "Apartment",
+      "url": "https://www.bayut.com/property/business-bay",
+      "distance_to_burj_khalifa_km": 2.3,
+      "features": [
+        "Canal view",
+        "Fully furnished",
+        "Smart home",
+        "Gym",
+        "Metro access"
+      ],
+      "building": "Business Central",
+      "year_built": 2019,
+      "ready_to_move": true
+    },
+    {
+      "id": "dp-005",
+      "title": "Penthouse in JBR (Jumeirah Beach Residence)",
+      "price": 5200000,
+      "price_per_sqm": 20800,
+      "currency": "AED",
+      "location": "Jumeirah Beach Residence (JBR)",
+      "coordinates": {
+        "lat": 25.0799,
+        "lon": 55.1336
+      },
+      "bedrooms": 4,
+      "bathrooms": 5,
+      "area_sqm": 250,
+      "property_type": "Penthouse",
+      "url": "https://www.propertyfinder.ae/property/jbr",
+      "distance_to_burj_khalifa_km": 15.8,
+      "features": [
+        "Beach access",
+        "Rooftop terrace",
+        "360° view",
+        "Private elevator",
+        "Jacuzzi"
+      ],
+      "building": "Rimal 5",
+      "year_built": 2017,
+      "ready_to_move": true
+    },
+    {
+      "id": "dp-006",
+      "title": "Studio Apartment in DIFC (Dubai International Financial Centre)",
+      "price": 680000,
+      "price_per_sqm": 13600,
+      "currency": "AED",
+      "location": "DIFC",
+      "coordinates": {
+        "lat": 25.2138,
+        "lon": 55.2824
+      },
+      "bedrooms": 0,
+      "bathrooms": 1,
+      "area_sqm": 50,
+      "property_type": "Apartment",
+      "url": "https://dubai.dubizzle.com/property/difc",
+      "distance_to_burj_khalifa_km": 3.5,
+      "features": [
+        "Financial district",
+        "Walking distance to metro",
+        "High ROI potential",
+        "24/7 concierge",
+        "Fully furnished"
+      ],
+      "building": "Gate Precinct",
+      "year_built": 2021,
+      "ready_to_move": true
+    },
+    {
+      "id": "dp-007",
+      "title": "Spacious 3BR Townhouse in Arabian Ranches",
+      "price": 2800000,
+      "price_per_sqm": 14000,
+      "currency": "AED",
+      "location": "Arabian Ranches",
+      "coordinates": {
+        "lat": 25.0545,
+        "lon": 55.2676
+      },
+      "bedrooms": 3,
+      "bathrooms": 4,
+      "area_sqm": 200,
+      "property_type": "Townhouse",
+      "url": "https://www.bayut.com/property/arabian-ranches",
+      "distance_to_burj_khalifa_km": 22.4,
+      "features": [
+        "Family community",
+        "Golf course view",
+        "Private garden",
+        "2 parking spaces",
+        "Pet friendly"
+      ],
+      "building": "Savannah",
+      "year_built": 2016,
+      "ready_to_move": true
+    },
+    {
+      "id": "dp-008",
+      "title": "Investment Studio in Dubai Silicon Oasis",
+      "price": 420000,
+      "price_per_sqm": 10500,
+      "currency": "AED",
+      "location": "Dubai Silicon Oasis (DSO)",
+      "coordinates": {
+        "lat": 25.1242,
+        "lon": 55.3823
+      },
+      "bedrooms": 0,
+      "bathrooms": 1,
+      "area_sqm": 40,
+      "property_type": "Apartment",
+      "url": "https://dubai.dubizzle.com/property/dso",
+      "distance_to_burj_khalifa_km": 18.9,
+      "features": [
+        "Tech hub location",
+        "High rental yield",
+        "Free zone benefits",
+        "Shopping mall nearby",
+        "University area"
+      ],
+      "building": "Silicon Gates",
+      "year_built": 2020,
+      "ready_to_move": true
+    },
+    {
+      "id": "dp-009",
+      "title": "Luxury 2BR in City Walk",
+      "price": 2100000,
+      "price_per_sqm": 16153.85,
+      "currency": "AED",
+      "location": "City Walk",
+      "coordinates": {
+        "lat": 25.2055,
+        "lon": 55.2638
+      },
+      "bedrooms": 2,
+      "bathrooms": 3,
+      "area_sqm": 130,
+      "property_type": "Apartment",
+      "url": "https://www.propertyfinder.ae/property/city-walk",
+      "distance_to_burj_khalifa_km": 4.7,
+      "features": [
+        "Urban lifestyle",
+        "Art galleries nearby",
+        "Restaurants on doorstep",
+        "Balcony",
+        "Modern design"
+      ],
+      "building": "Building 23",
+      "year_built": 2019,
+      "ready_to_move": true
+    },
+    {
+      "id": "dp-010",
+      "title": "Office Space in Dubai Media City",
+      "price": 1250000,
+      "price_per_sqm": 12500,
+      "currency": "AED",
+      "location": "Dubai Media City",
+      "coordinates": {
+        "lat": 25.0985,
+        "lon": 55.1644
+      },
+      "bedrooms": 0,
+      "bathrooms": 2,
+      "area_sqm": 100,
+      "property_type": "Office",
+      "url": "https://www.bayut.com/property/dubai-media-city",
+      "distance_to_burj_khalifa_km": 16.3,
+      "features": [
+        "Free zone license",
+        "100% foreign ownership",
+        "Parking included",
+        "Reception area",
+        "Meeting rooms"
+      ],
+      "building": "Aurora Tower",
+      "year_built": 2018,
+      "ready_to_move": true
+    },
+    {
+      "id": "dp-011",
+      "title": "Sea View 2BR in Dubai Harbour",
+      "price": 3500000,
+      "price_per_sqm": 21875,
+      "currency": "AED",
+      "location": "Dubai Harbour",
+      "coordinates": {
+        "lat": 25.0889,
+        "lon": 55.1178
+      },
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "area_sqm": 160,
+      "property_type": "Apartment",
+      "url": "https://www.propertyfinder.ae/property/dubai-harbour",
+      "distance_to_burj_khalifa_km": 17.1,
+      "features": [
+        "Yacht club access",
+        "Beach club membership",
+        "Infinity pool",
+        "Concierge service",
+        "Smart home system"
+      ],
+      "building": "Beach Vista",
+      "year_built": 2022,
+      "ready_to_move": false
+    },
+    {
+      "id": "dp-012",
+      "title": "4BR Villa in Dubai Hills Estate",
+      "price": 4800000,
+      "price_per_sqm": 16000,
+      "currency": "AED",
+      "location": "Dubai Hills Estate",
+      "coordinates": {
+        "lat": 25.1004,
+        "lon": 55.2451
+      },
+      "bedrooms": 4,
+      "bathrooms": 5,
+      "area_sqm": 300,
+      "property_type": "Villa",
+      "url": "https://www.bayut.com/property/dubai-hills-estate",
+      "distance_to_burj_khalifa_km": 12.8,
+      "features": [
+        "Golf course community",
+        "Private pool",
+        "Large garden",
+        "3 parking spaces",
+        "Close to schools"
+      ],
+      "building": "Maple",
+      "year_built": 2021,
+      "ready_to_move": true
+    }
+  ],
+  "statistics": {
+    "average_price_aed": 2909166.67,
+    "median_price_aed": 2450000,
+    "min_price_aed": 420000,
+    "max_price_aed": 8500000,
+    "average_price_per_sqm_aed": 15895.49,
+    "areas_covered": [
+      "Dubai Marina",
+      "Downtown Dubai",
+      "Palm Jumeirah",
+      "Business Bay",
+      "JBR",
+      "DIFC",
+      "Arabian Ranches",
+      "Dubai Silicon Oasis",
+      "City Walk",
+      "Dubai Media City",
+      "Dubai Harbour",
+      "Dubai Hills Estate"
+    ]
+  },
+  "free_zones": [
+    {
+      "name": "Dubai Multi Commodities Centre (DMCC)",
+      "location": "Jumeirah Lakes Towers",
+      "website": "https://www.dmcc.ae",
+      "cost_range_aed": {
+        "min": 15000,
+        "max": 50000
+      },
+      "benefits": [
+        "100% foreign ownership",
+        "0% corporate and personal tax",
+        "100% repatriation of capital and profits",
+        "No currency restrictions"
+      ],
+      "business_types": ["Trading", "Services", "Consulting"]
+    },
+    {
+      "name": "Dubai Silicon Oasis (DSO)",
+      "location": "Silicon Oasis",
+      "website": "https://www.dso.ae",
+      "cost_range_aed": {
+        "min": 12000,
+        "max": 45000
+      },
+      "benefits": [
+        "Tech-focused ecosystem",
+        "0% tax for 50 years",
+        "100% foreign ownership",
+        "State-of-art infrastructure"
+      ],
+      "business_types": ["IT", "Software", "E-commerce"]
+    },
+    {
+      "name": "Dubai Internet City (DIC)",
+      "location": "Dubai Marina area",
+      "website": "https://dic.ae",
+      "cost_range_aed": {
+        "min": 20000,
+        "max": 60000
+      },
+      "benefits": [
+        "Tech hub with major companies",
+        "100% foreign ownership",
+        "Tax exemptions",
+        "Access to talent pool"
+      ],
+      "business_types": ["IT", "Media", "E-commerce", "Software"]
+    }
+  ],
+  "landmarks": {
+    "burj_khalifa": {
+      "name": "Burj Khalifa",
+      "coordinates": {
+        "lat": 25.1972,
+        "lon": 55.2744
+      }
+    },
+    "dubai_mall": {
+      "name": "Dubai Mall",
+      "coordinates": {
+        "lat": 25.1981,
+        "lon": 55.2789
+      }
+    },
+    "dubai_marina": {
+      "name": "Dubai Marina",
+      "coordinates": {
+        "lat": 25.0805,
+        "lon": 55.1399
+      }
+    }
+  }
+}

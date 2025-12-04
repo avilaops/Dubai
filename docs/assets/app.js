@@ -1,236 +1,211 @@
-const selectors = (name) => document.querySelector(`[data-field="${name}"]`);
+// Dubai Real Estate Atlas - Frontend Application
+// Loads and displays Dubai property data
 
-const currency = (value) =>
-  typeof value === "number"
-    ? value.toLocaleString("pt-PT", {
-        style: "currency",
-        currency: "EUR",
-        minimumFractionDigits: 2,
-      })
-    : "—";
+document.addEventListener('DOMContentLoaded', () => {
+    loadDubaiData();
+});
 
-const number = (value, options = {}) =>
-  typeof value === "number"
-    ? value.toLocaleString("pt-PT", { maximumFractionDigits: 2, ...options })
-    : "—";
-
-const hasNumber = (value) => typeof value === "number" && Number.isFinite(value);
-
-const measurement = (value, unit, options = {}) =>
-  hasNumber(value) ? `${number(value, options)} ${unit}` : "—";
-
-const formatDate = (value) => {
-  try {
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) {
-      return value;
+async function loadDubaiData() {
+    try {
+        const response = await fetch('data/dubai-properties.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        // Update header badges
+        updateHeaderBadges(data);
+        
+        // Render statistics
+        renderStatistics(data.statistics);
+        
+        // Render properties
+        renderProperties(data.properties);
+        
+        // Render free zones
+        renderFreeZones(data.free_zones);
+        
+        // Render landmarks
+        renderLandmarks(data.landmarks);
+        
+        // Update footer
+        updateFooter(data.meta);
+        
+        console.log('✅ Dubai data loaded successfully');
+    } catch (error) {
+        console.error('❌ Error loading Dubai data:', error);
+        showError('Failed to load property data. Please refresh the page.');
     }
-    return new Intl.DateTimeFormat("pt-PT", { dateStyle: "long" }).format(date);
-  } catch (error) {
-    console.warn("Falha ao formatar data", value, error);
-    return value;
-  }
-};
-
-const formatRange = (start, end) => {
-  if (!start || !end) return "—";
-  return `${formatDate(start)} — ${formatDate(end)}`;
-};
-
-const joinList = (items) => {
-  if (!Array.isArray(items) || items.length === 0) return "—";
-  if (items.length === 1) return items[0];
-  return `${items.slice(0, -1).join(", ")} e ${items.at(-1)}`;
-};
-
-function renderInvoice(invoice) {
-  selectors("source").textContent = invoice.source ?? "Fonte desconhecida";
-  selectors("invoiceNumber").textContent = invoice.invoice_number ?? "Sem número";
-  selectors("atcud").textContent = invoice.atcud ?? "ATCUD";
-  selectors("issueDate").textContent = formatDate(invoice.issue_date);
-  selectors("billingRange").textContent = formatRange(
-    invoice.billing_period?.start,
-    invoice.billing_period?.end,
-  );
-  selectors("dueDate").textContent = formatDate(invoice.due_date);
-  selectors("totalAmount").textContent = currency(invoice.total_amount_eur);
-
-  selectors("electricityTotal").textContent = currency(
-    invoice.breakdown?.electricity_total_eur,
-  );
-  selectors("electricityNet").textContent = currency(
-    invoice.breakdown?.electricity_without_taxes_eur,
-  );
-  selectors("tariff").textContent = invoice.contract?.tariff ?? "—";
-  selectors("power").textContent = measurement(
-    invoice.contract?.power_kva,
-    "kVA",
-    { maximumFractionDigits: 2 },
-  );
-  selectors("consumptionTotal").textContent = measurement(
-    invoice.consumption?.total_kwh,
-    "kWh",
-  );
-  selectors("co2").textContent = measurement(
-    invoice.consumption?.co2_emissions_kg,
-    "kg",
-  );
-
-  selectors("entity").textContent = invoice.payment?.entity ?? "—";
-  selectors("reference").textContent = invoice.payment?.reference ?? "—";
-
-  selectors("customerName").textContent = invoice.customer?.name ?? "—";
-  selectors("customerNif").textContent = invoice.customer?.nif ?? "—";
-  selectors("customerAddress").textContent = invoice.customer?.billing_address ?? "—";
-
-  selectors("contractCode").textContent = invoice.contract?.code ?? "—";
-  selectors("contractCpe").textContent = invoice.contract?.cpe ?? "—";
-
-  const previous = invoice.meter_readings?.previous;
-  const current = invoice.meter_readings?.current;
-  selectors("previousReadings").textContent = previous
-    ? `${formatDate(previous.date)} · Vazio ${number(previous.vazio)} · Cheias ${number(
-        previous.cheias,
-      )} · Ponta ${number(previous.ponta)}`
-    : "—";
-  selectors("currentReadings").textContent = current
-    ? `${formatDate(current.date)} · Vazio ${number(current.vazio)} · Cheias ${number(
-        current.cheias,
-      )} · Ponta ${number(current.ponta)}`
-    : "—";
-
-  const breakdownContainer = selectors("consumptionBreakdown");
-  breakdownContainer.innerHTML = "";
-  const breakdown = invoice.consumption?.breakdown_kwh ?? {};
-  Object.entries(breakdown).forEach(([key, value]) => {
-    const chip = document.createElement("span");
-    chip.className = "chip";
-    chip.textContent = `${key.replace(/_/g, " ")}: ${number(value)} kWh`;
-    breakdownContainer.appendChild(chip);
-  });
-  selectors("consumptionNotes").textContent = joinList(invoice.consumption?.notes);
-
-  const chargesContainer = selectors("charges");
-  chargesContainer.innerHTML = "";
-  (invoice.charges_without_vat ?? []).forEach((item) => {
-    const quantity = item.quantity ?? "—";
-    const unit = item.unit ?? "";
-    const unitPrice = hasNumber(item.unit_price_eur)
-      ? currency(item.unit_price_eur)
-      : "—";
-    const amount = hasNumber(item.amount_eur)
-      ? currency(item.amount_eur)
-      : "—";
-    const vat = hasNumber(item.vat_rate)
-      ? `${number(item.vat_rate * 100, { maximumFractionDigits: 0 })}%`
-      : "—";
-
-    const row = document.createElement("div");
-    row.className = "table__row";
-    row.innerHTML = `
-      <span>${item.description}</span>
-      <span class="numeric">${quantity} ${unit}</span>
-      <span class="numeric">${unitPrice}</span>
-      <span class="numeric">${amount}</span>
-      <span class="numeric">${vat}</span>
-    `;
-    chargesContainer.appendChild(row);
-  });
-  if (!chargesContainer.children.length) {
-    const row = document.createElement("div");
-    row.className = "table__row";
-    row.innerHTML = '<span style="grid-column:1 / -1">Sem encargos registados.</span>';
-    chargesContainer.appendChild(row);
-  }
-
-  const taxesContainer = selectors("taxes");
-  taxesContainer.innerHTML = "";
-  (invoice.taxes_and_fees ?? []).forEach((item) => {
-    const base = hasNumber(item.base_eur) ? currency(item.base_eur) : item.base_eur ?? "—";
-    const vatAmount = hasNumber(item.vat_amount_eur)
-      ? currency(item.vat_amount_eur)
-      : item.vat_amount_eur ?? "—";
-    const vatRate = hasNumber(item.vat_rate)
-      ? `${number(item.vat_rate * 100, { maximumFractionDigits: 0 })}%`
-      : item.vat_rate ?? "";
-    const total = hasNumber(item.total_eur)
-      ? currency(item.total_eur)
-      : item.total_eur ?? "—";
-
-    const row = document.createElement("div");
-    row.className = "table__row";
-    row.innerHTML = `
-      <span>${item.description}</span>
-      <span class="numeric">${base}</span>
-      <span class="numeric">${vatAmount}<br/><small>${vatRate}</small></span>
-      <span class="numeric">${total}</span>
-    `;
-    taxesContainer.appendChild(row);
-  });
-  if (!taxesContainer.children.length) {
-    const row = document.createElement("div");
-    row.className = "table__row";
-    row.innerHTML = '<span style="grid-column:1 / -1">Sem taxas ou impostos registados.</span>';
-    taxesContainer.appendChild(row);
-  }
-
-  selectors("paymentAmount").textContent = currency(invoice.payment?.amount_eur);
-  selectors("paymentDeadline").textContent = formatDate(invoice.payment?.deadline);
-  selectors("paymentChannels").textContent = joinList(invoice.payment?.channels);
-  selectors("efficiencyTip").textContent = invoice.messages?.efficiency_tip ?? "—";
-  selectors("securityNotice").textContent = invoice.messages?.security_notice ?? "—";
-
-  const energyList = selectors("energyMix");
-  energyList.innerHTML = "";
-  (invoice.energy_mix_percentages ?? []).forEach((item) => {
-    const li = document.createElement("li");
-    li.innerHTML = `<strong>${number(item.percent, { maximumFractionDigits: 2 })}%</strong>${item.source}`;
-    energyList.appendChild(li);
-  });
-  if (!energyList.children.length) {
-    const li = document.createElement("li");
-    li.textContent = "Mix energético não informado.";
-    energyList.appendChild(li);
-  }
-  selectors("energyReference").textContent = invoice.energy_mix_reference ?? "—";
-
-  selectors("atcudFull").textContent = invoice.atcud ?? "—";
-  selectors("audiovisual").textContent = invoice.audiovisual_contribution
-    ? `${invoice.audiovisual_contribution.invoice_number} — ${currency(
-        invoice.audiovisual_contribution.total_eur,
-      )}`
-    : "—";
-  selectors("additionalNotes").textContent = joinList(invoice.additional_notes);
 }
 
-async function bootstrap() {
-  const statusPill = selectors("atcud");
-  try {
-    const response = await fetch("data/invoice-edp-2025-11.json", { cache: "no-cache" });
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+function updateHeaderBadges(data) {
+    const totalEl = document.getElementById('total-properties');
+    const avgPriceEl = document.getElementById('avg-price');
+    
+    if (totalEl) totalEl.textContent = `${data.meta.total_properties} Properties`;
+    if (avgPriceEl) avgPriceEl.textContent = `Avg: ${formatCurrency(data.statistics.average_price_aed)}`;
+}
+
+function renderStatistics(stats) {
+    document.getElementById('stat-total').textContent = stats.areas_covered?.length || '0';
+    document.getElementById('stat-avg-price').textContent = formatCurrency(stats.average_price_aed);
+    document.getElementById('stat-median-price').textContent = formatCurrency(stats.median_price_aed);
+    document.getElementById('stat-price-sqm').textContent = formatCurrency(stats.average_price_per_sqm_aed);
+    document.getElementById('stat-min-price').textContent = formatCurrency(stats.min_price_aed);
+    document.getElementById('stat-max-price').textContent = formatCurrency(stats.max_price_aed);
+}
+
+function renderProperties(properties) {
+    const container = document.getElementById('properties-container');
+    if (!container) return;
+    
+    container.innerHTML = properties.map(prop => `
+        <div class="property-card">
+            <div class="property-header">
+                <h3 class="property-title">${escapeHtml(prop.title)}</h3>
+                <span class="property-type">${prop.property_type}</span>
+            </div>
+            
+            <div class="property-price">
+                <span class="price-main">${formatCurrency(prop.price)}</span>
+                <span class="price-detail">AED ${formatNumber(prop.price_per_sqm)}/m²</span>
+            </div>
+            
+            <div class="property-details">
+                <div class="detail-row">
+                    <span class="detail-icon">📍</span>
+                    <span>${escapeHtml(prop.location)}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-icon">🏗️</span>
+                    <span>${escapeHtml(prop.building)}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-icon">🛏️</span>
+                    <span>${prop.bedrooms} BR · ${prop.bathrooms} Bath · ${formatNumber(prop.area_sqm)}m²</span>
+                </div>
+                ${prop.distance_to_burj_khalifa_km ? `
+                <div class="detail-row">
+                    <span class="detail-icon">📏</span>
+                    <span>${formatNumber(prop.distance_to_burj_khalifa_km)} km to Burj Khalifa</span>
+                </div>
+                ` : ''}
+                ${prop.coordinates ? `
+                <div class="detail-row">
+                    <span class="detail-icon">🌐</span>
+                    <span>${prop.coordinates.lat.toFixed(4)}, ${prop.coordinates.lon.toFixed(4)}</span>
+                </div>
+                ` : ''}
+            </div>
+            
+            <div class="property-features">
+                ${prop.features.slice(0, 3).map(f => `<span class="feature-tag">${escapeHtml(f)}</span>`).join('')}
+            </div>
+            
+            <div class="property-footer">
+                <span class="year-built">Built ${prop.year_built}</span>
+                ${prop.ready_to_move ? '<span class="ready-badge">Ready to Move</span>' : '<span class="under-construction">Under Construction</span>'}
+            </div>
+            
+            <a href="${escapeHtml(prop.url)}" target="_blank" class="property-link" rel="noopener noreferrer">
+                View Details →
+            </a>
+        </div>
+    `).join('');
+}
+
+function renderFreeZones(freeZones) {
+    const container = document.getElementById('free-zones-container');
+    if (!container) return;
+    
+    container.innerHTML = freeZones.map(zone => `
+        <div class="free-zone-card">
+            <h3 class="zone-name">${escapeHtml(zone.name)}</h3>
+            <div class="zone-location">
+                <span class="detail-icon">📍</span>
+                ${escapeHtml(zone.location)}
+            </div>
+            
+            <div class="zone-cost">
+                <strong>Setup Cost:</strong> 
+                AED ${formatNumber(zone.cost_range_aed.min)} - ${formatNumber(zone.cost_range_aed.max)}
+            </div>
+            
+            <div class="zone-benefits">
+                <strong>Benefits:</strong>
+                <ul>
+                    ${zone.benefits.map(b => `<li>${escapeHtml(b)}</li>`).join('')}
+                </ul>
+            </div>
+            
+            <div class="zone-business-types">
+                <strong>Business Types:</strong>
+                ${zone.business_types.map(bt => `<span class="biz-tag">${escapeHtml(bt)}</span>`).join('')}
+            </div>
+            
+            <a href="${escapeHtml(zone.website)}" target="_blank" class="zone-link" rel="noopener noreferrer">
+                Visit Website →
+            </a>
+        </div>
+    `).join('');
+}
+
+function renderLandmarks(landmarks) {
+    const container = document.getElementById('landmarks-container');
+    if (!container) return;
+    
+    const landmarkArray = Object.values(landmarks);
+    
+    container.innerHTML = landmarkArray.map(landmark => `
+        <div class="landmark-card">
+            <h3 class="landmark-name">${escapeHtml(landmark.name)}</h3>
+            <div class="landmark-coords">
+                <span class="detail-icon">🌐</span>
+                Lat: ${landmark.coordinates.lat.toFixed(4)}, Lon: ${landmark.coordinates.lon.toFixed(4)}
+            </div>
+        </div>
+    `).join('');
+}
+
+function updateFooter(meta) {
+    const sourceEl = document.getElementById('data-source');
+    const timestampEl = document.getElementById('data-timestamp');
+    
+    if (sourceEl) sourceEl.textContent = meta.source || 'Dubai Real Estate Atlas';
+    if (timestampEl) {
+        const date = new Date(meta.timestamp);
+        timestampEl.textContent = date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
     }
-    const invoice = await response.json();
-    renderInvoice(invoice);
-  } catch (error) {
-    console.error("Falha ao carregar dados da fatura", error);
-    if (statusPill) {
-      statusPill.textContent = "Carga falhou";
-      statusPill.classList.add("pill--error");
-    }
-    const main = document.querySelector("main");
+}
+
+function formatCurrency(amount) {
+    if (amount === null || amount === undefined) return 'N/A';
+    return `AED ${formatNumber(amount)}`;
+}
+
+function formatNumber(num) {
+    if (num === null || num === undefined) return 'N/A';
+    return new Intl.NumberFormat('en-AE').format(Math.round(num));
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function showError(message) {
+    const main = document.querySelector('main');
     if (main) {
-      const banner = document.createElement("div");
-      banner.className = "panel";
-      banner.innerHTML = `
-        <header class="panel__header">
-          <h2>Erro ao carregar dados</h2>
-          <p>Não foi possível sincronizar o JSON da fatura a partir do GitHub Pages.</p>
-        </header>
-      `;
-      main.prepend(banner);
+        main.innerHTML = `
+            <div class="error-message">
+                <h2>⚠️ Error</h2>
+                <p>${escapeHtml(message)}</p>
+            </div>
+        `;
     }
-  }
 }
-
-document.addEventListener("DOMContentLoaded", bootstrap);
