@@ -1,0 +1,216 @@
+{
+  "source": "EDP",
+  "document_id": "C801234002605948",
+  "invoice_number": "FT2025 K3425/340040367282",
+  "audiovisual_invoice_number": "FT2025 K1725/170042210472",
+  "atcud": "JB8Y9GZ2-340040367282",
+  "issue_date": "2025-11-20",
+  "billing_period": {
+    "start": "2025-10-18",
+    "end": "2025-11-17"
+  },
+  "due_date": "2025-12-29",
+  "currency": "EUR",
+  "total_amount_eur": 22.47,
+  "breakdown": {
+    "electricity_total_eur": 19.45,
+    "electricity_without_taxes_eur": 16.85,
+    "taxes_and_fees_eur": 2.60,
+    "audiovisual_contribution_total_eur": 3.02
+  },
+  "customer": {
+    "name": "Pedro Jorge Mateus Coelho",
+    "nif": "223077763",
+    "billing_address": "Rua Marcos Portugal, 9 2DT, 1200-256 Lisboa"
+  },
+  "contract": {
+    "code": "160004495585",
+    "cpe": "PT 0002 000 08B 276 298 WM",
+    "power_kva": 3.45,
+    "tariff": "B1-horário - Semanal"
+  },
+  "meter_readings": {
+    "previous": {
+      "date": "2025-10-17",
+      "vazio": 1753,
+      "ponta": 482,
+      "cheias": 1815
+    },
+    "current": {
+      "date": "2025-11-17",
+      "vazio": 1777,
+      "ponta": 489,
+      "cheias": 1839
+    }
+  },
+  "consumption": {
+    "total_kwh": 55,
+    "breakdown_kwh": {
+      "vazio": 24,
+      "ponta": 7,
+      "cheias": 24,
+      "fora_vazio": 31
+    },
+    "co2_emissions_kg": 7.45,
+    "notes": [
+      "Consumo real lido no contador a 17/11/2025.",
+      "Texto no documento refere que o consumo médio anual residencial é de ~2150 kWh (trecho parcialmente ilegível)."
+    ]
+  },
+  "charges_without_vat": [
+    {
+      "description": "Consumo real - período vazio",
+      "quantity": 24,
+      "unit": "kWh",
+      "unit_price_eur": 0.1161,
+      "amount_eur": 2.79,
+      "vat_rate": 0.06
+    },
+    {
+      "description": "Desconto tarifa social - período vazio",
+      "quantity": 24,
+      "unit": "kWh",
+      "unit_price_eur": -0.0484,
+      "amount_eur": -1.16,
+      "vat_rate": 0.06
+    },
+    {
+      "description": "Consumo real - fora vazio",
+      "quantity": 31,
+      "unit": "kWh",
+      "unit_price_eur": 0.1921,
+      "amount_eur": 5.96,
+      "vat_rate": 0.06
+    },
+    {
+      "description": "Desconto tarifa social - fora vazio",
+      "quantity": 31,
+      "unit": "kWh",
+      "unit_price_eur": -0.0484,
+      "amount_eur": -1.50,
+      "vat_rate": 0.06
+    },
+    {
+      "description": "Potência contratada 3,45 kVA",
+      "quantity": 31,
+      "unit": "dias",
+      "unit_price_eur": 0.4439,
+      "amount_eur": 13.76,
+      "vat_rate": 0.23
+    },
+    {
+      "description": "Tarifa de acesso às redes (BT 0,2/2019)",
+      "quantity": 31,
+      "unit": "dias",
+      "unit_price_eur": 0.1587,
+      "amount_eur": 4.92,
+      "vat_rate": 0.06
+    },
+    {
+      "description": "Desconto tarifa social - acesso às redes",
+      "quantity": 31,
+      "unit": "dias",
+      "unit_price_eur": -0.0968,
+      "amount_eur": -3.00,
+      "vat_rate": 0.06
+    }
+  ],
+  "taxes_and_fees": [
+    {
+      "description": "DGEG",
+      "quantity": "1 mês",
+      "unit_price_eur": 0.07,
+      "base_eur": 0.07,
+      "vat_rate": 0.23,
+      "vat_amount_eur": 0.02,
+      "total_eur": 0.09
+    },
+    {
+      "description": "IEC (isento)",
+      "period": "18/10/2025 a 17/11/2025",
+      "base_eur": 0.00,
+      "vat_rate": 0.00,
+      "vat_amount_eur": 0.00,
+      "total_eur": 0.00
+    },
+    {
+      "description": "IVA (base 8,01 €)",
+      "base_eur": 8.01,
+      "vat_rate": 0.06,
+      "vat_amount_eur": 0.48
+    },
+    {
+      "description": "IVA (base 8,91 €)",
+      "base_eur": 8.91,
+      "vat_rate": 0.23,
+      "vat_amount_eur": 2.05
+    }
+  ],
+  "audiovisual_contribution": {
+    "invoice_number": "FT2025 K1725/170042210472",
+    "base_eur": 2.85,
+    "vat_rate": 0.06,
+    "vat_amount_eur": 0.17,
+    "total_eur": 3.02,
+    "notes": "Processado por programa certificado n.º 631/AT (UHb)."
+  },
+  "regulatory_information": {
+    "quality_service_zone": "A",
+    "regulated_tariff_difference_eur": -8.13,
+    "social_tariff_discount_access_networks_eur": 5.66,
+    "processing_certificate": "Programa certificado n.º 631/AT"
+  },
+  "payment": {
+    "entity": "20174",
+    "reference": "701065331",
+    "amount_eur": 22.47,
+    "deadline": "2025-12-29",
+    "billing_period": "2025-10-18 a 2025-11-17",
+    "barcode": "120701065933111390002247251222990",
+    "channels": [
+      "MB Way",
+      "CTT",
+      "Payshop"
+    ]
+  },
+  "energy_mix_percentages": [
+    {
+      "source": "Hídrica",
+      "percent": 12.71
+    },
+    {
+      "source": "Eólica",
+      "percent": 27.77
+    },
+    {
+      "source": "Solar",
+      "percent": 6.34
+    },
+    {
+      "source": "Biomassa",
+      "percent": 7.72
+    },
+    {
+      "source": "Gás Natural",
+      "percent": 33.53
+    },
+    {
+      "source": "Importação",
+      "percent": 12.37
+    }
+  ],
+  "energy_mix_reference": "Mix energético EDP Comercial - 1.º trimestre 2025 (link indicado: https://www.edp.pt/particulares/fornecimento/planos/tarifarios/).",
+  "messages": {
+    "efficiency_tip": "Janelas novas, casa mais eficiente - Vidros duplos ou caixilharia em PVC mantêm a temperatura e reduzem o gasto com energia.",
+    "security_notice": "Aviso de segurança - Proteja-se das fraudes e antes de qualquer pagamento verifique se: o remetente do SMS é EDP C ou o remetente do e-mail termina em @edp.pt."
+  },
+  "services_offers": {
+    "gas_natural": "Aderir",
+    "servicos": "Aderir"
+  },
+  "additional_notes": [
+    "As leituras entre 14 e 26 de dezembro 2025 podem ser enviadas via app EDP, portal cliente, linha 808 53 53 53 ou WhatsApp (911 955 282).",
+    "Nota na fatura: o desconto correspondente à tarifa social incluído no acesso às redes é de 5,66 €.",
+    "Documento indica que a diferença para a tarifa regulada no mesmo consumo seria de -8,13 € (sem taxas e impostos)."
+  ]
+}
