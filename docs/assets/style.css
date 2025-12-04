@@ -655,12 +655,12 @@ dl dd {
   .table__row {
     grid-template-columns: 1.4fr repeat(4, minmax(70px, 1fr));
   }
-  
+
   .properties-grid,
   .free-zones-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }

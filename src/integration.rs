@@ -3,7 +3,11 @@
 // 100% Rust, zero dependências externas
 
 use crate::property_search::*;
-use std::time::Duration;
+use std::collections::HashMap;
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
+
+use avila_json::JsonValue;
+use avila_mongo::{MongoAtlasClient, MongoAtlasError, MongoDocument};
 
 /// Sistema completo de scraping e processamento de dados reais de Dubai
 pub struct DubaiDataPipeline {
@@ -12,18 +16,52 @@ pub struct DubaiDataPipeline {
     db: avila_db::Database,
     search_index: avila_search::SearchIndex,
     pub job_queue: avila_queue::Queue,
+    mongo: Option<MongoAtlasClient>,
 }
 
 impl DubaiDataPipeline {
     pub fn new(db_path: &str) -> std::io::Result<Self> {
         println!("🚀 Inicializando Pipeline de Dados de Dubai");
+        let http_client = avila_http::HttpClient::new();
+        let cache = avila_cache::Cache::new(1000);
+        let db = avila_db::Database::open(db_path)?;
+        let search_index = avila_search::SearchIndex::new();
+        let job_queue = avila_queue::Queue::new();
+
+        let mongo = match MongoAtlasClient::from_env() {
+            Ok(client) => {
+                println!(
+                    "🌍 MongoDB Atlas habilitado (app: {}, cluster: {}, database: {}, collection: {})",
+                    client.app_id(),
+                    client.cluster(),
+                    client.database(),
+                    client.collection()
+                );
+                Some(client)
+            }
+            Err(MongoAtlasError::MissingEnv(var)) => {
+                println!(
+                    "ℹ️ MongoDB Atlas desativado - defina {} e demais credenciais Atlas para habilitar integração.",
+                    var
+                );
+                None
+            }
+            Err(err) => {
+                println!(
+                    "⚠️ Falha ao inicializar MongoDB Atlas ({}). Continuando com AvilaDB local.",
+                    err
+                );
+                None
+            }
+        };
 
         Ok(Self {
-            http_client: avila_http::HttpClient::new(),
-            cache: avila_cache::Cache::new(1000), // max 1000 items
-            db: avila_db::Database::open(db_path)?,
-            search_index: avila_search::SearchIndex::new(),
-            job_queue: avila_queue::Queue::new(),
+            http_client,
+            cache,
+            db,
+            search_index,
+            job_queue,
+            mongo,
         })
     }
 
@@ -53,15 +91,26 @@ impl DubaiDataPipeline {
                 // Parsear HTML com AvilaParser
                 let properties = self.parse_bayut_html(html)?;
 
-                // Salvar no banco de dados
+                let mut persisted = 0usize;
                 for (i, prop) in properties.iter().enumerate() {
-                    let key = format!("property:bayut:{}:{}", area, i);
-                    let json = format!("{{\"title\":\"{}\", \"price\":{}}}", prop.title, prop.price);
-                    self.db.set(&key, json.as_bytes())
-                        .map_err(|e| format!("DB error: {}", e))?;
+                    match self.persist_property("bayut", area, i, prop) {
+                        Ok(_) => persisted += 1,
+                        Err(err) => println!(
+                            "⚠️ Falha ao persistir propriedade '{}' ({}): {}",
+                            prop.title, i, err
+                        ),
+                    }
                 }
 
-                println!("✅ {} propriedades salvas no DB", properties.len());
+                println!(
+                    "✅ {} propriedades persistidas via {}",
+                    persisted,
+                    if self.mongo.is_some() {
+                        "MongoDB Atlas"
+                    } else {
+                        "AvilaDB local"
+                    }
+                );
                 Ok(properties)
             }
             Err(e) => {
@@ -77,7 +126,11 @@ impl DubaiDataPipeline {
 
         // Usar AvilaParser para extrair elementos
         let mut parser = avila_parser::HtmlParser::new(html);
-        let elements = parser.parse();
+        let root = match parser.parse() {
+            Ok(element) => element,
+            Err(err) => return Err(format!("Parser error: {:?}", err)),
+        };
+        let elements = vec![root];
 
         // Procurar por elementos de propriedade (estrutura real do Bayut)
         for elem in &elements {
@@ -151,6 +204,126 @@ impl DubaiDataPipeline {
     fn parse_cached_properties(&self, _data: &[u8]) -> Result<Vec<PropertyListing>, String> {
         // TODO: Deserializar JSON com AvilaJson
         Ok(vec![])
+    }
+
+    fn persist_property(
+        &mut self,
+        source: &str,
+        area: &str,
+        index: usize,
+        property: &PropertyListing,
+    ) -> Result<(), String> {
+        let document = self.build_property_document(source, area, index, property);
+
+        if let Some(mongo) = &self.mongo {
+            match mongo.insert_document(&document) {
+                Ok(result) => {
+                    println!(
+                        "🟢 MongoDB Atlas inseriu documento {} ({}:{}:{})",
+                        result.inserted_id, source, area, index
+                    );
+                    return Ok(());
+                }
+                Err(err) => {
+                    println!(
+                        "⚠️ MongoDB Atlas falhou para '{}': {}. Usando AvilaDB local.",
+                        property.title, err
+                    );
+                }
+            }
+        }
+
+        self.persist_property_local(&document, source, area, index)
+    }
+
+    fn persist_property_local(
+        &mut self,
+        document: &MongoDocument,
+        source: &str,
+        area: &str,
+        index: usize,
+    ) -> Result<(), String> {
+        let key = format!("property:{}:{}:{}", source, area, index);
+        let json = document.to_json().to_string();
+        self.db
+            .set(&key, json.as_bytes())
+            .map_err(|e| format!("DB error: {}", e))
+    }
+
+    fn build_property_document(
+        &self,
+        source: &str,
+        area: &str,
+        index: usize,
+        property: &PropertyListing,
+    ) -> MongoDocument {
+        let mut document = MongoDocument::new();
+
+        document.insert_string("doc_type", "property");
+        document.insert_string("source", source);
+        document.insert_string("area", area);
+        document.insert_string("title", property.title.clone());
+        document.insert_number("price", property.price);
+        document.insert_string("currency", property.currency.clone());
+        document.insert_string("location", property.location.clone());
+        document.insert_number("bedrooms", property.bedrooms as f64);
+        document.insert_number("bathrooms", property.bathrooms as f64);
+        document.insert_number("area_sqm", property.area_sqm);
+        document.insert_string("url", property.url.clone());
+        document.insert_string(
+            "slug",
+            format!("{}-{}-{}", source, area.replace('/', "-"), index),
+        );
+        document.insert_number("index", index as f64);
+
+        if let Some(distance) = property.distance_to_burj_khalifa {
+            document.insert_number("distance_to_burj_khalifa_km", distance);
+        }
+
+        if let Some((lat, lon)) = property.coordinates {
+            let mut coords = HashMap::new();
+            coords.insert("lat".to_string(), JsonValue::Number(lat));
+            coords.insert("lon".to_string(), JsonValue::Number(lon));
+            document.insert_value("coordinates", JsonValue::Object(coords));
+        }
+
+        let timestamp = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_else(|_| Duration::from_secs(0))
+            .as_secs_f64();
+        document.insert_number("ingested_at_epoch", timestamp);
+
+        document.insert_value(
+            "property_type",
+            JsonValue::String(match property.property_type {
+                PropertyType::Apartment => "apartment".to_string(),
+                PropertyType::Villa => "villa".to_string(),
+                PropertyType::Townhouse => "townhouse".to_string(),
+                PropertyType::Penthouse => "penthouse".to_string(),
+                PropertyType::Office => "office".to_string(),
+            }),
+        );
+
+        document.insert_number("price_per_sqm", if property.area_sqm > 0.0 {
+            property.price / property.area_sqm
+        } else {
+            0.0
+        });
+
+        document
+    }
+
+    fn build_stats_document(&self, stats: &str, hash: &str) -> MongoDocument {
+        let mut document = MongoDocument::new();
+        document.insert_string("doc_type", "stats");
+        document.insert_string("payload", stats);
+        document.insert_string("hash", hash);
+        let timestamp = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_else(|_| Duration::from_secs(0))
+            .as_secs_f64();
+        document.insert_number("recorded_at_epoch", timestamp);
+        document
     }
 
     /// Processar imagens de propriedades
@@ -307,6 +480,16 @@ impl DubaiDataPipeline {
         self.db.set("stats:hash", hash_str.as_bytes())
             .map_err(|e| format!("DB error: {}", e))?;
 
+        if let Some(mongo) = &self.mongo {
+            let stats_doc = self.build_stats_document(stats, &hash_str);
+            if let Err(err) = mongo.insert_document(&stats_doc) {
+                println!(
+                    "⚠️ Falha ao sincronizar estatísticas com MongoDB Atlas: {}",
+                    err
+                );
+            }
+        }
+
         println!("✅ Stats salvas com hash: {}", &hash_str[..16]);
         Ok(())
     }
@@ -315,6 +498,7 @@ impl DubaiDataPipeline {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::fs;
 
     #[test]
     fn test_pipeline_creation() {
@@ -353,5 +537,69 @@ mod tests {
         ]);
 
         assert_eq!(pipeline.job_queue.len(), 2);
+    }
+
+    #[test]
+    fn test_property_document_building() {
+        let pipeline = DubaiDataPipeline::new("test_property_doc.db").unwrap();
+
+        let property = PropertyListing {
+            title: "Test Property".to_string(),
+            price: 1_500_000.0,
+            currency: "AED".to_string(),
+            location: "Dubai Marina".to_string(),
+            coordinates: Some((25.0, 55.0)),
+            bedrooms: 3,
+            bathrooms: 2,
+            area_sqm: 120.0,
+            property_type: PropertyType::Apartment,
+            url: "https://example.com/property".to_string(),
+            distance_to_burj_khalifa: Some(12.5),
+        };
+
+        let document = pipeline.build_property_document("bayut", "dubai-marina", 0, &property);
+        let json = document.to_json().to_string();
+        assert!(json.contains("\"doc_type\":\"property\""));
+        assert!(json.contains("\"source\":\"bayut\""));
+        assert!(json.contains("\"title\":\"Test Property\""));
+
+        drop(pipeline);
+        fs::remove_file("test_property_doc.db").ok();
+    }
+
+    #[test]
+    fn test_property_persistence_fallback() {
+        let path = "test_property_store.db";
+
+        {
+            let mut pipeline = DubaiDataPipeline::new(path).unwrap();
+            pipeline.mongo = None; // garantir fallback local
+
+            let property = PropertyListing {
+                title: "Fallback Test".to_string(),
+                price: 900_000.0,
+                currency: "AED".to_string(),
+                location: "Downtown".to_string(),
+                coordinates: None,
+                bedrooms: 2,
+                bathrooms: 2,
+                area_sqm: 80.0,
+                property_type: PropertyType::Apartment,
+                url: "https://example.com/fallback".to_string(),
+                distance_to_burj_khalifa: None,
+            };
+
+            pipeline
+                .persist_property("bayut", "downtown-dubai", 0, &property)
+                .expect("fallback storage should succeed");
+
+            let stored = pipeline
+                .db
+                .get("property:bayut:downtown-dubai:0")
+                .expect("db access");
+            assert!(stored.is_some());
+        }
+
+        fs::remove_file(path).ok();
     }
 }

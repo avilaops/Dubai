@@ -33,6 +33,16 @@ impl HttpClient {
         self.request("POST", url, Some(body), &HashMap::new())
     }
 
+    /// Perform a POST request with custom headers
+    pub fn post_with_headers(
+        &self,
+        url: &str,
+        body: &str,
+        headers: &HashMap<String, String>,
+    ) -> Result<Response, HttpError> {
+        self.request("POST", url, Some(body), headers)
+    }
+
     /// Generic HTTP request
     fn request(
         &self,

@@ -1,0 +1,11 @@
+[package]
+name = "avila-mongo"
+version = "0.1.0"
+edition = "2021"
+authors = ["Nícolas Ávila <avilaops@gmail.com>"]
+description = "MongoDB Atlas integration using Avila native HTTP/TLS stack"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+avila-http = { path = "../avila-http" }
+avila-json = { path = "../avila-json" }

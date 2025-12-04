@@ -12,25 +12,25 @@ async function loadDubaiData() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        
+
         // Update header badges
         updateHeaderBadges(data);
-        
+
         // Render statistics
         renderStatistics(data.statistics);
-        
+
         // Render properties
         renderProperties(data.properties);
-        
+
         // Render free zones
         renderFreeZones(data.free_zones);
-        
+
         // Render landmarks
         renderLandmarks(data.landmarks);
-        
+
         // Update footer
         updateFooter(data.meta);
-        
+
         console.log('✅ Dubai data loaded successfully');
     } catch (error) {
         console.error('❌ Error loading Dubai data:', error);
@@ -41,7 +41,7 @@ async function loadDubaiData() {
 function updateHeaderBadges(data) {
     const totalEl = document.getElementById('total-properties');
     const avgPriceEl = document.getElementById('avg-price');
-    
+
     if (totalEl) totalEl.textContent = `${data.meta.total_properties} Properties`;
     if (avgPriceEl) avgPriceEl.textContent = `Avg: ${formatCurrency(data.statistics.average_price_aed)}`;
 }
@@ -58,19 +58,19 @@ function renderStatistics(stats) {
 function renderProperties(properties) {
     const container = document.getElementById('properties-container');
     if (!container) return;
-    
+
     container.innerHTML = properties.map(prop => `
         <div class="property-card">
             <div class="property-header">
                 <h3 class="property-title">${escapeHtml(prop.title)}</h3>
                 <span class="property-type">${prop.property_type}</span>
             </div>
-            
+
             <div class="property-price">
                 <span class="price-main">${formatCurrency(prop.price)}</span>
                 <span class="price-detail">AED ${formatNumber(prop.price_per_sqm)}/m²</span>
             </div>
-            
+
             <div class="property-details">
                 <div class="detail-row">
                     <span class="detail-icon">📍</span>
@@ -97,16 +97,16 @@ function renderProperties(properties) {
                 </div>
                 ` : ''}
             </div>
-            
+
             <div class="property-features">
                 ${prop.features.slice(0, 3).map(f => `<span class="feature-tag">${escapeHtml(f)}</span>`).join('')}
             </div>
-            
+
             <div class="property-footer">
                 <span class="year-built">Built ${prop.year_built}</span>
                 ${prop.ready_to_move ? '<span class="ready-badge">Ready to Move</span>' : '<span class="under-construction">Under Construction</span>'}
             </div>
-            
+
             <a href="${escapeHtml(prop.url)}" target="_blank" class="property-link" rel="noopener noreferrer">
                 View Details →
             </a>
@@ -117,7 +117,7 @@ function renderProperties(properties) {
 function renderFreeZones(freeZones) {
     const container = document.getElementById('free-zones-container');
     if (!container) return;
-    
+
     container.innerHTML = freeZones.map(zone => `
         <div class="free-zone-card">
             <h3 class="zone-name">${escapeHtml(zone.name)}</h3>
@@ -125,24 +125,24 @@ function renderFreeZones(freeZones) {
                 <span class="detail-icon">📍</span>
                 ${escapeHtml(zone.location)}
             </div>
-            
+
             <div class="zone-cost">
-                <strong>Setup Cost:</strong> 
+                <strong>Setup Cost:</strong>
                 AED ${formatNumber(zone.cost_range_aed.min)} - ${formatNumber(zone.cost_range_aed.max)}
             </div>
-            
+
             <div class="zone-benefits">
                 <strong>Benefits:</strong>
                 <ul>
                     ${zone.benefits.map(b => `<li>${escapeHtml(b)}</li>`).join('')}
                 </ul>
             </div>
-            
+
             <div class="zone-business-types">
                 <strong>Business Types:</strong>
                 ${zone.business_types.map(bt => `<span class="biz-tag">${escapeHtml(bt)}</span>`).join('')}
             </div>
-            
+
             <a href="${escapeHtml(zone.website)}" target="_blank" class="zone-link" rel="noopener noreferrer">
                 Visit Website →
             </a>
@@ -153,9 +153,9 @@ function renderFreeZones(freeZones) {
 function renderLandmarks(landmarks) {
     const container = document.getElementById('landmarks-container');
     if (!container) return;
-    
+
     const landmarkArray = Object.values(landmarks);
-    
+
     container.innerHTML = landmarkArray.map(landmark => `
         <div class="landmark-card">
             <h3 class="landmark-name">${escapeHtml(landmark.name)}</h3>
@@ -170,7 +170,7 @@ function renderLandmarks(landmarks) {
 function updateFooter(meta) {
     const sourceEl = document.getElementById('data-source');
     const timestampEl = document.getElementById('data-timestamp');
-    
+
     if (sourceEl) sourceEl.textContent = meta.source || 'Dubai Real Estate Atlas';
     if (timestampEl) {
         const date = new Date(meta.timestamp);

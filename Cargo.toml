@@ -15,6 +15,14 @@ path = "src/lib.rs"
 name = "dubai-project"
 path = "src/main.rs"
 
+[[bin]]
+name = "fetch-dubai-data"
+path = "src/bin/fetch_dubai_data.rs"
+
+[[bin]]
+name = "sync-to-atlas"
+path = "src/bin/sync_to_atlas.rs"
+
 [dependencies]
 # Zero external dependencies - 100% native Rust implementation
 # Internal workspace crates
@@ -31,6 +39,7 @@ avila-pdf = { path = "crates/avila-pdf" }
 avila-queue = { path = "crates/avila-queue" }
 avila-search = { path = "crates/avila-search" }
 avila-image = { path = "crates/avila-image" }
+avila-mongo = { path = "crates/avila-mongo" }
 
 [workspace]
 members = [
@@ -47,6 +56,7 @@ members = [
     "crates/avila-queue",
     "crates/avila-search",
     "crates/avila-image",
+    "crates/avila-mongo",
 ]
 
 [profile.release]
